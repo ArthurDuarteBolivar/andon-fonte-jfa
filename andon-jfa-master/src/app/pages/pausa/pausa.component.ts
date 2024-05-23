@@ -17,29 +17,55 @@ export class PausaComponent implements OnInit {
   ngOnInit(): void {
   }
   cafe() {
-    this.nodemcuService.postPausa()
-    this.OnCafe = true
-    this.nodemcuService.pausa(true).subscribe()
-    this.openSnackBar("Pausado com sucesso")
+    this.nodemcuService.postPausa();
+    this.OnCafe = true;
+    this.nodemcuService.pausa(true).subscribe();
+    this.openSnackBar("Pausado com sucesso");
+  
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  
     setTimeout(() => {
-      this.openSnackBar("Reiniciado com sucesso")
-      this.nodemcuService.pausa(false).subscribe()
-      this.OnCafe = false
-    }, 60000); //10 minutos
+      this.openSnackBar("Reiniciado com sucesso");
+      this.nodemcuService.pausa(false).subscribe();
+      this.OnCafe = false;
+    }, 600000); // 10 minutos
   }
+  
+  // Lógica para pausa no almoço
   almoco() {
-    this.nodemcuService.postPausa()
-    this.OnAlmoco = true
-    this.openSnackBar("Pausado com sucesso")
-    this.nodemcuService.pausa(true).subscribe()
+    // Chamar a função para pausar
+    this.nodemcuService.postPausa();
+    this.OnAlmoco = true;
+    this.openSnackBar("Pausado com sucesso");
+    this.nodemcuService.pausa(true).subscribe();
+  
+    // Registrar o Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          // Registro do Service Worker bem-sucedido
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          // Falha no registro do Service Worker
+          console.log('ServiceWorker registration failed: ', err);
+          console.log(Cache)
+        });
+      });
+    }
+  
     setTimeout(() => {
-      this.OnAlmoco = false
-      this.nodemcuService.pausa(false).subscribe()
-      this.openSnackBar("Reiniciado com sucesso")
-      
-    }, 60000);//60 minutos
-    //3600000
-    
+      this.openSnackBar("Reiniciado com sucesso");
+      this.nodemcuService.pausa(false).subscribe();
+      this.OnAlmoco = false;
+    }, 3600000); // 60 minutos
   }
 
   openSnackBar(text: string) {

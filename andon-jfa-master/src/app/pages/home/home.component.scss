@@ -217,3 +217,33 @@ section {
     background-color: rgb(132, 0, 255); /* Define a cor do traço */
   }
   
+  .piscar_azul{
+    animation: piscarAzul 1s ease-in-out infinite;
+  }
+  
+  .piscar_vermelho{
+    animation: piscarVermelho 1s ease-in-out infinite;
+  }
+
+  @keyframes piscarAzul {
+    0%{
+      background-color: #00ff00;
+    }
+    50%{
+      background-color: #5ac5e9;
+    }
+    100%{
+      background-color: #00ff00;
+    }
+  }
+  @keyframes piscarVermelho {
+    0%{
+      background-color: #00ff00;
+    }
+    50%{
+      background-color: red;
+    }
+    100%{
+      background-color: #00ff00;
+    }
+  }

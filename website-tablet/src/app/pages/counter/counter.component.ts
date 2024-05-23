@@ -28,12 +28,13 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
     public dialog: MatDialog,
     private sheetsService: SheetsService,
     private router: Router
-  ) { }
-  imposto: number = 0;
-  shiftTime: number = 8.66;
-  minutos8: number = 0;
-  minutos9: number = 0;
-  realizadoInterval!: NodeJS.Timer;
+    ) { }
+    imposto: number = 0;
+    shiftTime: number = 8.66;
+    minutos8: number = 0;
+    minutos9: number = 0;
+    realizadoInterval!: NodeJS.Timer;
+  onAjuda: boolean = false;
   minutos10: number = 0;
   minutos11: number = 0;
   minutos12: number = 0;
@@ -492,6 +493,9 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.intervalRef = setInterval(() => {
       this.contador++;
       this.operationService.atualizar(this.operation.name, this.contador);
+      if (this.contador == parseInt((this.lmitedTime + 60).toFixed(0))) {
+        this.operationService.changeTimeExcess(this.operation.name)
+      }
       if (this.contador > 9999) {
         this.stopTimer(state);
       } else if (
@@ -741,6 +745,24 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.azulStateCalled = false;
       this.onAnalise = false;
+    }
+  }
+
+  ajuda() {
+    this.onAjuda = !this.onAjuda
+    if(this.onAjuda){
+      this.operationService.atualizarState(this.operation.name, 'piscar_azul');
+      clearInterval(this.intervalo);
+      this.tempoOcioso = 0;
+      this.intervaloCounter();
+      this.stateButton = true;
+      this.contador = 0;
+      this.contadorRodando = false;
+      clearInterval(this.intervalRef);
+      this.vermelhoStateCalled = false;
+      this.azulStateCalled = false;
+    }else{
+      this.operationService.atualizarState(this.operation.name, 'verde');
     }
   }
 }

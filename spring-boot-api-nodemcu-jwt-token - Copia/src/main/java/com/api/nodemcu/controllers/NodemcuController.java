@@ -26,11 +26,8 @@ public class NodemcuController {
 
     @GetMapping("/{name}")
     public NodemcuModel findByName(@PathVariable String name) {
-        System.out.println(name);
         OperationModel operation = operationRepository.findByName(name);
-        System.out.println(operation);
         NodemcuModel nodemcu = repository.findByNameId(operation);
-        System.out.println(nodemcu);
         return nodemcu;
     }
 

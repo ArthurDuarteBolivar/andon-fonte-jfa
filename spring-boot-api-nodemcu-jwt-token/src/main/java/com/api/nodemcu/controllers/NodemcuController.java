@@ -360,7 +360,6 @@ public class NodemcuController {
                 realizadoHorariaTabletRepository.save(realizado);
                 break;
         }
-        System.out.println(realizado.getId());
          device.setCount(realizadoHorariaTabletRepository.somarTudo(realizado.getId()));
          repository.save(device);
     }
@@ -428,6 +427,8 @@ public class NodemcuController {
                     nodemcu.setShortestTC(9999);
                     nodemcu.setLocalTC(0);
                     nodemcu.setCount(0);
+                    nodemcu.setTime_excess(0);
+                    nodemcu.setAnalise(0);
                     repository.save(nodemcu);
                 }
 

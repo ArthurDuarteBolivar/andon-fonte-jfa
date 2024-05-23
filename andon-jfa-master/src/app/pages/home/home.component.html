@@ -87,7 +87,10 @@
         }"
         [ngClass]="{
           'unica-1': item.nameId.name === '080' || item.nameId.name === '090',
-          'unica-2': item.nameId.name === '100' || item.nameId.name === '110'
+          'unica-2': item.nameId.name === '100' || item.nameId.name === '110',
+          'piscar_azul': item.state === 'piscar_azul',
+          'piscar_vermelho': item.state === 'piscar',
+          'help': item.state === 'help'
         }"
       >
         {{ item.nameId.name }}
