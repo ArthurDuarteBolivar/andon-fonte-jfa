@@ -23,13 +23,6 @@ export class NodemcuService {
     return this.http.get<Realizado[]>( environment.url + "realizadoHoraria")
   }
 
-  postResultsGeral(imposto: number, realizado: number){
-    this.http.post( environment.url + "geral", {'imposto': imposto, 'realizado': realizado}).subscribe()
-  }
-
-  getAllResultadoGeral(): Observable<ResultadoGeral[]>{
-    return this.http.get<ResultadoGeral[]>( environment.url + "geral")
-  }
 
   pausa(pausa: boolean){
     return this.http.get(environment.url + "operation/pausa/" + pausa)
