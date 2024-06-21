@@ -4,7 +4,7 @@
     <h1 *ngIf="modeloAtual && modeloAtual.modelo !== ''">
       {{ modeloAtual.modelo }}
     </h1>
-    <h1>{{ dataAtual | date : "d/MM/YY  hh:mm" }}</h1>
+    <h1>{{ dataAtual | date : "d/MM/YY HH:mm" }}</h1>
   </div>
 
   <div class="div2">
@@ -25,25 +25,19 @@
       </p>
     </div>
     <div>
-      <p>Delta</p>
-      <p
-        class="value text_black"
-        [ngStyle]="{
+      <p>Diferença</p>
+      <p class="value text_black" [ngStyle]="{
           'background-color': 0 <= realizado - previsto ? '#00FF00' : 'red'
-        }"
-      >
+        }">
         {{ realizado - previsto | number : "1.0-0" }}
       </p>
     </div>
     <div>
-      <p>Delta(%)</p>
-      <p
-        class="value text_black"
-        [ngStyle]="{
+      <p>Diferença(%)</p>
+      <p class="value text_black" [ngStyle]="{
           'background-color':
             0 > ((previsto - realizado) / previsto) * 100 ? '#00FF00' : 'red'
-        }"
-      >
+        }">
         {{ ((realizado - previsto) / previsto) * 100 | number : "1.0-0" }}
       </p>
     </div>
@@ -51,11 +45,11 @@
 
   <div class="div4">
     <div>
-      <p>Impostação Horaria</p>
+      <p>Impostação Horária</p>
       <p class="value">{{ imposto / shiftTime | number : "1.0-0" }}</p>
     </div>
     <div>
-      <p>Média Horaria</p>
+      <p>Média Horária</p>
       <p class="value text_black" [ngStyle]="{ 'background-color': '#00FF00' }">
         {{ realizado / (effectiveTime / 60) | number : "1.0-0" }}
       </p>
@@ -75,132 +69,41 @@
   <table class="div1">
     <tr>
       <th class="border-th">Operação</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{
+      <td *ngFor="let item of nodemcu" [ngStyle]="{
           'background-color':
             item.state === 'verde'
               ? '#00FF00'
               : item.state === 'azul'
               ? '#5ac5e9'
               : 'red'
-        }"
-        [ngClass]="{
+        }" [ngClass]="{
           'unica-1': item.nameId.name === '080' || item.nameId.name === '090',
           'unica-2': item.nameId.name === '100' || item.nameId.name === '110',
           'piscar_azul': item.state === 'piscar_azul',
           'piscar_vermelho': item.state === 'piscar',
           'help': item.state === 'help'
-        }"
-      >
+        }">
         {{ item.nameId.name }}
       </td>
     </tr>
     <tr>
       <th>TC médio do turno</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{
+      <td *ngFor="let item of nodemcu" [ngStyle]="{
           'background-color': item.tcmedio <= TCimpostado ? '#00FF00' : 'red'
-        }"
-      >
+        }">
         {{ item.tcmedio }}
       </td>
     </tr>
+
     <tr>
       <th>Quantidade</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{ 'background-color': '#00FF00' }"
-      >
+      <td *ngFor="let item of nodemcu" [ngStyle]="{ 'background-color': '#00FF00' }">
         {{ item.count }}
       </td>
     </tr>
     <tr>
-      <th>Qtde em manutenção</th>
-      <td *ngFor="let item of nodemcu" [ngStyle]="{ color: 'white' }">
-        {{ item.maintenance }}
-      </td>
-    </tr>
-    <tr>
-      <th>Qtde de TC excedido</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{ 'background-color': '#00FF00' }"
-      >
-        {{ item.qtdeTCexcedido }}
-        <span>{{item.analise}}</span>
-        <span>{{item.time_excess}}</span>
-      </td>
-    </tr>
-    <tr>
-      <th>3º Último TC</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{
-          'background-color':
-            TCimpostado >= item.secondtlastTC
-              ? '#00FF00'
-              : (item.nameId.name === '110' ||
-                item.nameId.name === '100' ||
-                item.nameId.name === '080' ||
-                item.nameId.name === '090'
-                  ? 240
-                  : TCimpostado) <= item.secondtlastTC
-              ? 'red'
-              : '#00FF00'
-        }"
-      >
-        {{ item.secondtlastTC }}
-      </td>
-    </tr>
-    <tr>
-      <th>2º Último TC</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{
-          'background-color':
-            TCimpostado >= item.firtlastTC
-              ? '#00FF00'
-              : (item.nameId.name === '110' ||
-                item.nameId.name === '100' ||
-                item.nameId.name === '080' ||
-                item.nameId.name === '090'
-                  ? 180
-                  : TCimpostado) <= item.firtlastTC
-              ? 'red'
-              : '#00FF00'
-        }"
-      >
-        {{ item.firtlastTC }}
-      </td>
-    </tr>
-    <tr>
-      <th>1º Último TC</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{
-          'background-color':
-            TCimpostado >= item.currentTC
-              ? '#00FF00'
-              : (item.nameId.name === '110' ||
-                item.nameId.name === '100' ||
-                item.nameId.name === '080' ||
-                item.nameId.name === '090'
-                  ? 180
-                  : TCimpostado) <= item.currentTC
-              ? 'red'
-              : '#00FF00'
-        }"
-      >
-        {{ item.currentTC }}
-      </td>
-    </tr>
-    <tr>
-      <th>Tempo Ciclo Atual</th>
-      <td
-        *ngFor="let item of nodemcu"
-        [ngStyle]="{
+      <th>TC Atual</th>
+      <td *ngFor="let item of nodemcu" [ngStyle]="{
           'background-color':
             TCimpostado >= item.localTC
               ? '#00FF00'
@@ -212,9 +115,78 @@
                   : TCimpostado) <= item.localTC
               ? 'red'
               : '#00FF00'
-        }"
-      >
-        {{ item.localTC }}
+        }">
+        {{ counting[item.id] }}
+      </td>
+    </tr>
+    <tr>
+      <th>2º TC</th>
+      <td *ngFor="let item of nodemcu" [ngStyle]="{
+          'background-color':
+            TCimpostado >= item.currentTC
+              ? '#00FF00'
+              : (item.nameId.name === '110' ||
+                item.nameId.name === '100' ||
+                item.nameId.name === '080' ||
+                item.nameId.name === '090'
+                  ? 180
+                  : TCimpostado) <= item.currentTC
+              ? 'red'
+              : '#00FF00'
+        }">
+        {{ item.currentTC }}
+      </td>
+    </tr>
+    <tr>
+      <th>3º TC</th>
+      <td *ngFor="let item of nodemcu" [ngStyle]="{
+          'background-color':
+            TCimpostado >= item.firtlastTC
+              ? '#00FF00'
+              : (item.nameId.name === '110' ||
+                item.nameId.name === '100' ||
+                item.nameId.name === '080' ||
+                item.nameId.name === '090'
+                  ? 180
+                  : TCimpostado) <= item.firtlastTC
+              ? 'red'
+              : '#00FF00'
+        }">
+        {{ item.firtlastTC }}
+      </td>
+    </tr>
+    <tr>
+      <th> 4º TC</th>
+      <td *ngFor="let item of nodemcu" [ngStyle]="{
+          'background-color':
+            TCimpostado >= item.secondtlastTC
+              ? '#00FF00'
+              : (item.nameId.name === '110' ||
+                item.nameId.name === '100' ||
+                item.nameId.name === '080' ||
+                item.nameId.name === '090'
+                  ? 240
+                  : TCimpostado) <= item.secondtlastTC
+              ? 'red'
+              : '#00FF00'
+        }">
+        {{ item.secondtlastTC }}
+      </td>
+    </tr>
+    <tr>
+      <th>Refugo</th>
+      <td *ngFor="let item of nodemcu" [ngStyle]="{ color: 'white' }">
+        {{ item.maintenance }}
+      </td>
+    </tr>
+    <tr>
+      <th>TC excedido</th>
+      <td *ngFor="let item of nodemcu" [ngStyle]="{ 'background-color': 'red' }">
+        {{ item.qtdeTCexcedido }}
+        <span>{{item.analise}}</span>
+        <span>{{item.ajuda}}</span>
+        <!-- <span>{{item.time_excess}}</span> -->
+
       </td>
     </tr>
   </table>
@@ -222,8 +194,7 @@
     <tr>
       <th>Horas</th>
       <td class="horas">
-        <mat-icon
-          *ngIf="
+        <img src="assets/up.png" *ngIf="
             realizadoHora.horas7 > minutos8 * impostodivididoporshift &&
             parseToInt(
               (
@@ -232,12 +203,8 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="
+          ">
+        <!-- <p class="text-verde" *ngIf="
             realizadoHora.horas7 > minutos8 * impostodivididoporshift &&
             parseToInt(
               (
@@ -246,18 +213,16 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-        >
+          ">
           +{{
-            (
-              ((realizadoHora.horas7 - minutos8 * impostodivididoporshift) /
-                (minutos8 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((realizadoHora.horas7 - minutos8 * impostodivididoporshift) /
+          (minutos8 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
-        <mat-icon
-          *ngIf="
+        </p> -->
+        <img src="assets\down.png" *ngIf="
             realizadoHora.horas7 < minutos8 * impostodivididoporshift &&
             parseToInt(
               (
@@ -266,12 +231,8 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="
+          ">
+        <!-- <p class="text-vermelho" *ngIf="
             realizadoHora.horas7 < minutos8 * impostodivididoporshift &&
             parseToInt(
               (
@@ -280,21 +241,19 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-        >
+          ">
           -{{
-            (
-              ((minutos8 * impostodivididoporshift - realizadoHora.horas7) /
-                (minutos8 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((minutos8 * impostodivididoporshift - realizadoHora.horas7) /
+          (minutos8 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
+        </p> -->
         8
       </td>
       <td class="horas">
-        <mat-icon
-          *ngIf="
+        <img src="assets\up.png" *ngIf="
             realizadoHora.horas8 > minutos9 * impostodivididoporshift &&
             parseToInt(
               (
@@ -303,12 +262,9 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="
+          ">
+
+        <!-- <p class="text-verde" *ngIf="
             realizadoHora.horas8 > minutos9 * impostodivididoporshift &&
             parseToInt(
               (
@@ -317,18 +273,16 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-        >
+          ">
           +{{
-            (
-              ((realizadoHora.horas8 - minutos9 * impostodivididoporshift) /
-                (minutos9 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((realizadoHora.horas8 - minutos9 * impostodivididoporshift) /
+          (minutos9 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
-        <mat-icon
-          *ngIf="
+        </p> -->
+        <img src="assets\down.png"  *ngIf="
             realizadoHora.horas8 < minutos9 * impostodivididoporshift &&
             parseToInt(
               (
@@ -337,12 +291,8 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="
+          ">
+        <!-- <p class="text-vermelho" *ngIf="
             realizadoHora.horas8 < minutos9 * impostodivididoporshift &&
             parseToInt(
               (
@@ -351,21 +301,19 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-        >
+          ">
           -{{
-            (
-              ((minutos9 * impostodivididoporshift - realizadoHora.horas8) /
-                (minutos9 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((minutos9 * impostodivididoporshift - realizadoHora.horas8) /
+          (minutos9 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
+        </p> -->
         9
       </td>
       <td class="horas">
-        <mat-icon
-          *ngIf="
+        <img src="assets\up.png" *ngIf="
             realizadoHora.horas9 > minutos10 * impostodivididoporshift &&
             parseToInt(
               (
@@ -374,12 +322,9 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="
+          ">
+
+        <!-- <p class="text-verde" *ngIf="
             realizadoHora.horas9 > minutos10 * impostodivididoporshift &&
             parseToInt(
               (
@@ -388,18 +333,16 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-        >
+          ">
           +{{
-            (
-              ((realizadoHora.horas9 - minutos10 * impostodivididoporshift) /
-                (minutos10 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((realizadoHora.horas9 - minutos10 * impostodivididoporshift) /
+          (minutos10 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
-        <mat-icon
-          *ngIf="
+        </p> -->
+        <img src="assets\down.png"  *ngIf="
             realizadoHora.horas9 < minutos10 * impostodivididoporshift &&
             parseToInt(
               (
@@ -408,12 +351,8 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="
+          ">
+        <!-- <p class="text-vermelho" *ngIf="
             realizadoHora.horas9 < minutos10 * impostodivididoporshift &&
             parseToInt(
               (
@@ -422,22 +361,20 @@
                 100
               ).toFixed(0)
             ) != 0
-          "
-        >
+          ">
           -{{
-            (
-              ((minutos10 * impostodivididoporshift - realizadoHora.horas9) /
-                (minutos10 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((minutos10 * impostodivididoporshift - realizadoHora.horas9) /
+          (minutos10 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
+        </p> -->
         10
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas10 > minutos11 * impostodivididoporshift &&
+        <img src="assets\up.png" *ngIf="realizadoHora.horas10 > minutos11 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos11 * impostodivididoporshift -
@@ -445,12 +382,9 @@
                 (minutos11 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas10 > minutos11 * impostodivididoporshift &&
+          ) != 0">
+
+        <!-- <p class="text-verde" *ngIf="realizadoHora.horas10 > minutos11 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos11 * impostodivididoporshift -
@@ -458,18 +392,16 @@
                 (minutos11 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
+          ) != 0">
           +{{
-            (
-              ((realizadoHora.horas10 - minutos11 * impostodivididoporshift) /
-                (minutos11 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((realizadoHora.horas10 - minutos11 * impostodivididoporshift) /
+          (minutos11 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas10 < minutos11 * impostodivididoporshift &&
+        </p> -->
+        <img src="assets\down.png"  *ngIf="realizadoHora.horas10 < minutos11 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos11 * impostodivididoporshift -
@@ -477,12 +409,8 @@
                 (minutos11 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas10 < minutos11 * impostodivididoporshift &&
+          ) != 0">
+        <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas10 < minutos11 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos11 * impostodivididoporshift -
@@ -490,22 +418,20 @@
                 (minutos11 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
+          ) != 0">
           -{{
-            (
-              ((minutos11 * impostodivididoporshift - realizadoHora.horas10) /
-                (minutos11 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((minutos11 * impostodivididoporshift - realizadoHora.horas10) /
+          (minutos11 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
+        </p> -->
         11
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas11 > minutos12 * impostodivididoporshift &&
+        <img src="assets\up.png" *ngIf="realizadoHora.horas11 > minutos12 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos12 * impostodivididoporshift -
@@ -513,12 +439,9 @@
                 (minutos12 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas11 > minutos12 * impostodivididoporshift &&
+          ) != 0">
+
+        <!-- <p class="text-verde" *ngIf="realizadoHora.horas11 > minutos12 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos12 * impostodivididoporshift -
@@ -526,18 +449,16 @@
                 (minutos12 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
+          ) != 0">
           +{{
-            (
-              ((realizadoHora.horas11 - minutos12 * impostodivididoporshift) /
-                (minutos12 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((realizadoHora.horas11 - minutos12 * impostodivididoporshift) /
+          (minutos12 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas11 < minutos12 * impostodivididoporshift &&
+        </p> -->
+        <img src="assets\down.png"  *ngIf="realizadoHora.horas11 < minutos12 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos12 * impostodivididoporshift -
@@ -545,12 +466,8 @@
                 (minutos12 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas11 < minutos12 * impostodivididoporshift &&
+          ) != 0">
+        <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas11 < minutos12 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos12 * impostodivididoporshift -
@@ -558,22 +475,20 @@
                 (minutos12 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
+          ) != 0">
           -{{
-            (
-              ((minutos12 * impostodivididoporshift - realizadoHora.horas11) /
-                (minutos12 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((minutos12 * impostodivididoporshift - realizadoHora.horas11) /
+          (minutos12 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
+        </p> -->
         12
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas12 > minutos13 * impostodivididoporshift &&
+        <img src="assets\up.png" *ngIf="realizadoHora.horas12 > minutos13 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos13 * impostodivididoporshift -
@@ -581,12 +496,9 @@
                 (minutos13 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas12 > minutos13 * impostodivididoporshift &&
+          ) != 0">
+
+        <!-- <p class="text-verde" *ngIf="realizadoHora.horas12 > minutos13 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos13 * impostodivididoporshift -
@@ -594,18 +506,16 @@
                 (minutos13 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
+          ) != 0">
           +{{
-            (
-              ((realizadoHora.horas12 - minutos13 * impostodivididoporshift) /
-                (minutos13 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((realizadoHora.horas12 - minutos13 * impostodivididoporshift) /
+          (minutos13 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas12 < minutos13 * impostodivididoporshift &&
+        </p> -->
+        <img src="assets\down.png"  *ngIf="realizadoHora.horas12 < minutos13 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos13 * impostodivididoporshift -
@@ -613,12 +523,8 @@
                 (minutos13 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas12 < minutos13 * impostodivididoporshift &&
+          ) != 0">
+        <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas12 < minutos13 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos13 * impostodivididoporshift -
@@ -626,22 +532,20 @@
                 (minutos13 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
+          ) != 0">
           -{{
-            (
-              ((minutos13 * impostodivididoporshift - realizadoHora.horas12) /
-                (minutos13 * (imposto / shiftTime / 60))) *
-              100
-            ).toFixed(0)
+          (
+          ((minutos13 * impostodivididoporshift - realizadoHora.horas12) /
+          (minutos13 * (imposto / shiftTime / 60))) *
+          100
+          ).toFixed(0)
           }}%
-        </p>
+        </p> -->
         13
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas13 > minutos14 * impostodivididoporshift &&
+        <img src="assets\up.png" *ngIf="realizadoHora.horas13 > minutos14 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos14 * impostodivididoporshift -
@@ -649,12 +553,9 @@
                 (minutos14 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas13 > minutos14 * impostodivididoporshift &&
+          ) != 0">
+
+          <!-- <p class="text-verde" *ngIf="realizadoHora.horas13 > minutos14 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos14 * impostodivididoporshift -
@@ -662,18 +563,16 @@
                 (minutos14 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0" 
-        >
-          +{{
+          ) != 0">
+            +{{
             (
-              ((realizadoHora.horas13 - minutos14 * impostodivididoporshift) /
-                (minutos14 * (imposto / shiftTime / 60))) *
-              100
+            ((realizadoHora.horas13 - minutos14 * impostodivididoporshift) /
+            (minutos14 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}%
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas13 < minutos14 * impostodivididoporshift &&
+            }}%
+          </p> -->
+          <img src="assets\down.png"  *ngIf="realizadoHora.horas13 < minutos14 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos14 * impostodivididoporshift -
@@ -681,12 +580,8 @@
                 (minutos14 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas13 < minutos14 * impostodivididoporshift &&
+          ) != 0">
+          <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas13 < minutos14 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos14 * impostodivididoporshift -
@@ -694,22 +589,20 @@
                 (minutos14 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          -{{
+          ) != 0">
+            -{{
             (
-              ((minutos14 * impostodivididoporshift - realizadoHora.horas13) /
-                (minutos14 * (imposto / shiftTime / 60))) *
-              100
+            ((minutos14 * impostodivididoporshift - realizadoHora.horas13) /
+            (minutos14 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}%
-        </p>
-        14
+            }}%
+          </p> -->
+          14
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas14 > minutos15 * impostodivididoporshift &&
+        <img src="assets\up.png"  *ngIf="realizadoHora.horas14 > minutos15 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos15 * impostodivididoporshift -
@@ -717,12 +610,9 @@
                 (minutos15 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0" 
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas14 > minutos15 * impostodivididoporshift &&
+          ) != 0">
+
+          <!-- <p class="text-verde" *ngIf="realizadoHora.horas14 > minutos15 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos15 * impostodivididoporshift -
@@ -730,18 +620,16 @@
                 (minutos15 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          +{{
+          ) != 0">
+            +{{
             (
-              ((realizadoHora.horas14 - minutos15 * impostodivididoporshift) /
-                (minutos15 * (imposto / shiftTime / 60))) *
-              100
+            ((realizadoHora.horas14 - minutos15 * impostodivididoporshift) /
+            (minutos15 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}%
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas14 < minutos15 * impostodivididoporshift &&
+            }}%
+          </p> -->
+          <img src="assets\down.png"  *ngIf="realizadoHora.horas14 < minutos15 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos15 * impostodivididoporshift -
@@ -749,12 +637,8 @@
                 (minutos15 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas14 < minutos15 * impostodivididoporshift &&
+          ) != 0">
+          <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas14 < minutos15 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos15 * impostodivididoporshift -
@@ -762,22 +646,20 @@
                 (minutos15 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          -{{
+          ) != 0">
+            -{{
             (
-              ((minutos15 * impostodivididoporshift - realizadoHora.horas14) /
-                (minutos15 * (imposto / shiftTime / 60))) *
-              100
+            ((minutos15 * impostodivididoporshift - realizadoHora.horas14) /
+            (minutos15 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}%
-        </p>
-        15
+            }}%
+          </p> -->
+          15
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas15 > minutos16 * impostodivididoporshift &&
+        <img src="assets\up.png"  *ngIf="realizadoHora.horas15 > minutos16 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos16 * impostodivididoporshift -
@@ -785,12 +667,9 @@
                 (minutos16 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas15 > minutos16 * impostodivididoporshift &&
+          ) != 0">
+
+          <!-- <p class="text-verde" *ngIf="realizadoHora.horas15 > minutos16 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos16 * impostodivididoporshift -
@@ -798,18 +677,16 @@
                 (minutos16 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          +{{
+          ) != 0">
+            +{{
             (
-              ((realizadoHora.horas15 - minutos16 * impostodivididoporshift) /
-                (minutos16 * (imposto / shiftTime / 60))) *
-              100
+            ((realizadoHora.horas15 - minutos16 * impostodivididoporshift) /
+            (minutos16 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas15 < minutos16 * impostodivididoporshift &&
+            }}
+          </p> -->
+          <img src="assets\down.png"  *ngIf="realizadoHora.horas15 < minutos16 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos16 * impostodivididoporshift -
@@ -817,12 +694,8 @@
                 (minutos16 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas15 < minutos16 * impostodivididoporshift &&
+          ) != 0">
+          <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas15 < minutos16 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos16 * impostodivididoporshift -
@@ -830,22 +703,20 @@
                 (minutos16 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          -{{
+          ) != 0">
+            -{{
             (
-              ((minutos16 * impostodivididoporshift - realizadoHora.horas15) /
-                (minutos16 * (imposto / shiftTime / 60))) *
-              100
+            ((minutos16 * impostodivididoporshift - realizadoHora.horas15) /
+            (minutos16 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}%
-        </p>
-        16
+            }}%
+          </p> -->
+          16
       </td>
 
       <td class="horas">
-        <mat-icon
-          *ngIf="realizadoHora.horas16 > minutos17 * impostodivididoporshift &&
+        <img src="assets\up.png"  *ngIf="realizadoHora.horas16 > minutos17 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos17 * impostodivididoporshift -
@@ -853,12 +724,9 @@
                 (minutos17 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_up</mat-icon
-        >
-        <p
-          class="text-verde"
-          *ngIf="realizadoHora.horas16 > minutos17 * impostodivididoporshift &&
+          ) != 0">
+
+          <!-- <p class="text-verde" *ngIf="realizadoHora.horas16 > minutos17 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos17 * impostodivididoporshift -
@@ -866,18 +734,16 @@
                 (minutos17 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          +{{
+          ) != 0">
+            +{{
             (
-              ((realizadoHora.horas16 - minutos17 * impostodivididoporshift) /
-                (minutos17 * (imposto / shiftTime / 60))) *
-              100
+            ((realizadoHora.horas16 - minutos17 * impostodivididoporshift) /
+            (minutos17 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}
-        </p>
-        <mat-icon
-          *ngIf="realizadoHora.horas16 < minutos17 * impostodivididoporshift &&
+            }}
+          </p> -->
+          <img src="assets\down.png"  *ngIf="realizadoHora.horas16 < minutos17 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos17 * impostodivididoporshift -
@@ -885,12 +751,8 @@
                 (minutos17 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-          >keyboard_arrow_down</mat-icon
-        >
-        <p
-          class="text-vermelho"
-          *ngIf="realizadoHora.horas16 < minutos17 * impostodivididoporshift &&
+          ) != 0">
+          <!-- <p class="text-vermelho" *ngIf="realizadoHora.horas16 < minutos17 * impostodivididoporshift &&
           parseToInt(
             (
               ((minutos17 * impostodivididoporshift -
@@ -898,119 +760,98 @@
                 (minutos17 * (imposto / shiftTime / 60))) *
               100
             ).toFixed(0)
-          ) != 0"
-        >
-          -{{
+          ) != 0">
+            -{{
             (
-              ((minutos17 * impostodivididoporshift - realizadoHora.horas16) /
-                (minutos17 * (imposto / shiftTime / 60))) *
-              100
+            ((minutos17 * impostodivididoporshift - realizadoHora.horas16) /
+            (minutos17 * (imposto / shiftTime / 60))) *
+            100
             ).toFixed(0)
-          }}%
-        </p>
-        17
+            }}%
+          </p> -->
+          17
       </td>
     </tr>
     <tr>
-      <th>Realizado</th>
-      <td
-        [ngStyle]="{
+      <th>Realizado Total</th>
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas7 >= minutos8 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas7 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas8 >= minutos9 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas8 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas9 >= minutos10 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas9 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas10 >= minutos11 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas10 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas11 >= minutos12 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas11 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas12 >= minutos13 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas12 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas13 >= minutos14 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas13 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas14 >= minutos15 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas14 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas15 >= minutos16 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas15 }}
       </td>
-      <td
-        [ngStyle]="{
+      <td [ngStyle]="{
           'background-color':
             realizadoHora.horas16 >= minutos17 * impostodivididoporshift - 0.5
               ? '#00FF00'
               : 'red'
-        }"
-      >
+        }">
         {{ realizadoHora.horas16 }}
       </td>
     </tr>

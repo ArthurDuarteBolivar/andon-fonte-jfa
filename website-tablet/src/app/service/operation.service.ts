@@ -40,7 +40,7 @@ export class OperationService {
     return this.http.get<Main[]>(environment.url + "main")
   }
 
-  atualizar(name: string, tempo: number) {
+  atualizar(name: string, tempo: boolean) {
     this.http.get(environment.url + "nodemcu/atualizarTempo/" + name + "/" + tempo).subscribe()
 
   }
@@ -122,6 +122,13 @@ export class OperationService {
 
   changeTimeExcess(name: string){
     this.http.get(environment.url + "nodemcu/timeExcess/" + name).subscribe()
+  }
+  changeAjuda(name: string){
+    this.http.get(environment.url + "nodemcu/ajuda/" + name).subscribe()
+  }
+
+  getAll(): Observable<Operation[]>{
+    return this.http.get<Operation[]>(environment.url + "operation")
   }
 
 }

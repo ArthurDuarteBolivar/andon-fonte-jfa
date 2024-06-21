@@ -47,6 +47,8 @@ public class NodemcuModel {
 
     private Integer secondtlastTC;
 
+    private Integer ajuda;
+
     private Integer thirdlastTC;
 
     private Integer shortestTC;
@@ -56,6 +58,8 @@ public class NodemcuModel {
     private Integer TCmedio;
 
     private Integer localTC;
+
+    private Boolean isCounting;
 
     @PrePersist
     protected void prePersist() {

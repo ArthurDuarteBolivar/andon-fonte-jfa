@@ -1,3 +1,4 @@
+import {cafe, almoco} from "pausa.component.ts"
 var CACHE_NAME = 'cache-v1';
 
 if ('serviceWorker' in navigator) {

@@ -4,9 +4,11 @@ import { CounterComponent } from './pages/counter/counter.component';
 import { AppComponent } from './app.component';
 import { ErrorRouterComponent } from './pages/error-router/error-router.component';
 import { QrcodeCounterComponent } from './pages/qrcode-counter/qrcode-counter.component';
+import { AnaliseComponent } from './pages/analise/analise.component';
 
 const routes: Routes = [
   { path: 'counter/:name', component: CounterComponent },
+  { path: 'lider', component: AnaliseComponent },
   { path: 'qrcode/:name', component: QrcodeCounterComponent },
   { path: 'error', component: ErrorRouterComponent },
   {path: '**', redirectTo: ''}

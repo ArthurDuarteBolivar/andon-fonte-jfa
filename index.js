@@ -14,11 +14,8 @@ async function criarTransportador() {
     const transportador = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            type: 'OAuth2',
             user: 'jfaandon@gmail.com',
-            clientId: '498418341515-7ds18ttg766dlv578mou1oh8fajr3n00.apps.googleusercontent.com',
-            clientSecret: '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',
-            refreshToken: '1//04L4vLlteU5sbCgYIARAAGAQSNwF-L9IrGQXkd1RN9xVLh36Xixnlt91tPu__GwEfYAmqkq5jr6vn5HRQEPsF03misPurTZGWlI8',
+            password: 'jfa1234567'
         },
     });
 
@@ -30,9 +27,9 @@ async function enviarEmail(nome) {
 
     const opcoesEmail = {
         from: 'jfaandon@gmail.com',
-        to: 'avila.marcsvg@gmail.com, bolivarartur77@gmail.com',
+        to: 'avila.marcsvg@gmail.com',
         subject: 'Print Andon',
-        text: 'Este é um e-mail de teste enviado pela API com um anexo.',
+        html: `<p>Print do dia Andon ${new Date().toLocaleDateString()}</p>`,
         attachments: [
             {
                 filename: nome, // Nome do arquivo anexado
@@ -41,7 +38,7 @@ async function enviarEmail(nome) {
             }
         ]
     };
-
+    //bolivarartur77@gmail.com, flaviobh.camelo@gmail.com, jfa.diogenes@gmail.com, processos5@jfaeletronicos.com, processos1@jfaeletronicos.com',
     transportador.sendMail(opcoesEmail, function (erro, info) {
         if (erro) {
             console.error('Erro ao enviar o e-mail:', erro);

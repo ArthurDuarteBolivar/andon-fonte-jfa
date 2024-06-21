@@ -21,7 +21,11 @@ public interface NodemcuRepository extends JpaRepository<NodemcuModel, Integer> 
 
     @Modifying
     @Query(value = "UPDATE thdados n SET n.localTC = :newLocalTC WHERE n.name_id = :nameId", nativeQuery = true)
-    void updateLocalTCByNameId(@Param("newLocalTC") Integer newLocalTC, @Param("nameId") Integer nameId);
+    void updateLocalTCByNameId(@Param("newLocalTC") Integer tempo, @Param("nameId") Integer nameId);
+    
+    @Modifying
+    @Query(value = "UPDATE thdados n SET n.is_counting = :newLocalTC WHERE n.name_id = :nameId", nativeQuery = true)
+    void updateIsCountingByNameId(@Param("newLocalTC") Boolean newLocalTC, @Param("nameId") Integer nameId);
 
     @Modifying
     @Query(value = "update thdados set state = :newState where name_id = :nameId", nativeQuery = true)

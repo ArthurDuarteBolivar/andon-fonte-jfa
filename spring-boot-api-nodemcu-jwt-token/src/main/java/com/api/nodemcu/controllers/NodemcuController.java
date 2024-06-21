@@ -105,6 +105,16 @@ public class NodemcuController {
         repository.save((nodemcu));
     }
 
+    @GetMapping("/ajuda/{name}")
+    public void AddAjuda(@PathVariable String name){
+        OperationModel operation = operationRepository.findByName(name);
+        NodemcuModel nodemcu = repository.findByNameId(operation);
+        nodemcu.setState("piscar_azul");
+        nodemcu.setAjuda(nodemcu.getAjuda() + 1);
+        repository.save((nodemcu));
+    }
+
+
 
 
     @PostMapping()
@@ -130,8 +140,8 @@ public class NodemcuController {
         device.setFirtlastTC(device.getCurrentTC());
 
         Float tcimposto = mainRepostory.findById(1).get().getTCimposto();
-        if(nodemcuUpdates.getNameId().getName().equals("100") || nodemcuUpdates.getNameId().getName().equals("110")){
-            tcimposto = tcimposto * 2;
+        if(nodemcuUpdates.getNameId().getName().equals("100") || nodemcuUpdates.getNameId().getName().equals("110")|| nodemcuUpdates.getNameId().getName().equals("080")|| nodemcuUpdates.getNameId().getName().equals("090")){
+            tcimposto = 180F;
         }
         if (device.getShortestTC() > nodemcuUpdates.getShortestTC() && nodemcuUpdates.getShortestTC() > 10) {
             device.setShortestTC(nodemcuUpdates.getShortestTC());
@@ -366,9 +376,9 @@ public class NodemcuController {
 
     @Transactional
     @GetMapping("/atualizarTempo/{name}/{tempo}")
-    public void iniciarTempo(@PathVariable("name") String name, @PathVariable("tempo") Integer tempo) {
+    public void iniciarTempo(@PathVariable("name") String name, @PathVariable("tempo") Boolean tempo) {
         OperationModel operation = operationRepository.findByName(name);
-        repository.updateLocalTCByNameId(tempo, operation.getId());
+        repository.updateIsCountingByNameId(tempo, operation.getId());
     }
 
     // @GetMapping("/atualizarTempo/{name}/{tempo}")

@@ -19,6 +19,7 @@ import { DialogFonteComponent } from './shared/dialog-fonte/dialog-fonte.compone
 import { ErrorRouterComponent } from './pages/error-router/error-router.component';
 import { QrcodeCounterComponent } from './pages/qrcode-counter/qrcode-counter.component';
 import { DialogAvisoComponent } from './shared/dialog-aviso/dialog-aviso.component';
+import { AnaliseComponent } from './pages/analise/analise.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { DialogAvisoComponent } from './shared/dialog-aviso/dialog-aviso.compone
     ErrorRouterComponent,
     QrcodeCounterComponent,
     DialogAvisoComponent,
+    AnaliseComponent,
   ],
   
   imports: [

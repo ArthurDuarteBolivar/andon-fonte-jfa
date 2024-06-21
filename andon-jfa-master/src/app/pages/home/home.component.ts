@@ -24,8 +24,10 @@ export class HomeComponent implements OnInit {
     private mainService: MainService,
     private modeloService: ModeloService
   ) { }
-
-
+  
+  
+  intervaloImposto: any;
+  intervaloRealizado: any;
   isPrevisto: boolean = false
   dataAtual = new Date();
   modeloAtual!: Modelo;
@@ -38,6 +40,7 @@ export class HomeComponent implements OnInit {
   MediaHorarioRealizada: number = 0;
   nodemcu: Nodemcu[] = [];
   date: any;
+  counting: number[] = []
   TCimpostado: number = 0;
   previsto: number = 0;
   shiftTime: number = 8.66;
@@ -51,7 +54,7 @@ export class HomeComponent implements OnInit {
   minutos15: number = 0;
   minutos16: number = 0;
   minutos17: number = 0;
-
+  
   minutos: Minutos = {
     minutos7: false,
     minutos8: false,
@@ -68,7 +71,7 @@ export class HomeComponent implements OnInit {
   
   hours: any;
   effectiveTime: any;
-  calculoImposto  = 0;
+  calculoImposto = 0;
   ProportionalDiscount: number = 0;
   init: boolean = false;
   currentTC: number[] = [];
@@ -91,8 +94,10 @@ export class HomeComponent implements OnInit {
   impostodivididoporshift: any = 0;
   dialogRef: any;
   realizado7 = 0
+  
+  ngOnInit(): void { 
 
-  ngOnInit(): void {
+    
     this.modeloService.getAll().subscribe(res => {
       res.forEach(item => {
         if (item.is_current == true) {
@@ -112,6 +117,9 @@ export class HomeComponent implements OnInit {
 
     this.nodemcuService.getAll().subscribe((res) => {
       this.nodemcu = res;
+      this.nodemcu.forEach(item => {
+        this.counting[item.id] = 0;
+      })
       this.mainService.getAllMain().subscribe((res: any) => {
         this.imposto = res[0].imposto;
         this.shiftTime = res[0].shiftTime
@@ -120,283 +128,314 @@ export class HomeComponent implements OnInit {
     this.nodemcuService.getAllRealizado().subscribe((res) => {
       this.realizadoHora = res[0];
     });
-    setInterval(() => {
-      this.impostodivididoporshift = (this.imposto / this.shiftTime / 60);
-      this.diaDaSemanda = new Date();
-      this.horasAtuais = new Date().getHours();
-      this.mainService.getControleRealizadoByDate().subscribe((res) => {
-        res.forEach((item) => {
-          if (new Date(item.data).getDay() === new Date().getDay()) {
-            if (item.realizadoHora == 7) {
-              this.minutos.minutos7 = true;
-            } else if (item.realizadoHora == 8) {
-              this.minutos.minutos8 = true;
-            } else if (item.realizadoHora == 9) {
-              this.minutos.minutos9 = true;
-            } else if (item.realizadoHora == 10) {
-              this.minutos.minutos10 = true;
-            } else if (item.realizadoHora == 11) {
-              this.minutos.minutos11 = true;
-            } else if (item.realizadoHora == 12) {
-              this.minutos.minutos12 = true;
-            } else if (item.realizadoHora == 13) {
-              this.minutos.minutos14 = true;
-            } else if (item.realizadoHora == 14) {
-              this.minutos.minutos13 = true;
-            } else if (item.realizadoHora == 15) {
-              this.minutos.minutos15 = true;
-            } else if (item.realizadoHora == 16) {
-              this.minutos.minutos16 = true;
-            } else if (item.realizadoHora == 17) {
-              this.minutos.minutos17 = true;
-            }
-          }
-        });
-        if (this.horasAtuais == 7) {
-          this.minutos8 = new Date().getMinutes();
-        } else if (this.horasAtuais == 8) {
-          this.minutos8 = 60;
-          this.minutos9 = new Date().getMinutes();
-        } else if (this.horasAtuais == 9) {
-          if (
-            this.realizadoHora.horas7 <
-            this.minutos8 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos8) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas7,
-                this.minutos8 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = new Date().getMinutes();
-        } else if (this.horasAtuais == 10) {
-          if (
-            this.realizadoHora.horas8 <
-            this.minutos9 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos9) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas8,
-                this.minutos9 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = new Date().getMinutes();
-        } else if (this.horasAtuais == 11) {
-          if (
-            this.realizadoHora.horas9 <
-            this.minutos10 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos10) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas9,
-                this.minutos10 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = new Date().getMinutes();
-        } else if (this.horasAtuais == 12) {
-          if (
-            this.realizadoHora.horas10 <
-            this.minutos11 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos11) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas10,
-                this.minutos11 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = 60;
-          this.minutos13 = new Date().getMinutes();
-        } else if (this.horasAtuais == 13) {
-          if (
-            this.realizadoHora.horas11 <
-            this.minutos12 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos12) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas11,
-                this.minutos12 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = 60;
-          this.minutos13 = 60;
-          this.minutos14 = new Date().getMinutes();
-        } else if (this.horasAtuais == 14) {
-          if (
-            this.realizadoHora.horas12 <
-            this.minutos13 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos13) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas12,
-                this.minutos13 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = 60;
-          this.minutos13 = 60;
-          this.minutos14 = 60;
-          this.minutos15 = new Date().getMinutes();
-        } else if (this.horasAtuais == 15) {
-          if (
-            this.realizadoHora.horas13 <
-            this.minutos14 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos14) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas13,
-                this.minutos14 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = 60;
-          this.minutos13 = 60;
-          this.minutos14 = 60;
-          this.minutos15 = 60;
-          this.minutos16 = new Date().getMinutes();
-        } else if (this.horasAtuais == 16) {
-          if (
-            this.realizadoHora.horas14 <
-            this.minutos15 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos15) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas14,
-                this.minutos15 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = 60;
-          this.minutos13 = 60;
-          this.minutos14 = 60;
-          this.minutos15 = 60;
-          this.minutos16 = 60;
-          this.minutos17 = new Date().getMinutes();
-        } else if (this.horasAtuais == 17) {
-          if (
-            this.realizadoHora.horas15 <
-            this.minutos16 * (this.imposto / this.shiftTime / 60) - 0.5
-          ) {
-            if (!this.minutos.minutos16) {
-              this.openDialogControleRealizado(
-                this.realizadoHora.horas15,
-                this.minutos16 * (this.imposto / this.shiftTime / 60) - 0.5,
-                this.horasAtuais - 1
-              );
-            }
-          }
-          this.minutos8 = 60;
-          this.minutos9 = 60;
-          this.minutos10 = 60;
-          this.minutos11 = 60;
-          this.minutos12 = 60;
-          this.minutos13 = 60;
-          this.minutos14 = 60;
-          this.minutos15 = 60;
-          this.minutos16 = 60;
-          this.minutos17 = 60;
-          this.minutos17 = new Date().getMinutes();
-        }
-      });
-
-
-      const currentDate = new Date();
-      const newDatehours = new Date(currentDate.getTime() - 7 * 60 * 60 * 1000);
-      const hours1 = newDatehours.getHours();
-      const minutes1 = newDatehours.getMinutes();
-      this.date = hours1 * 60 + minutes1;
-
-      this.effectiveTime = this.date;
-
-      const hours = String(currentDate.getHours()).padStart(2, '0');
-      const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-
-      this.hours = `${hours}:${minutes}`;
-      this.getValues();
-
-
-      this.nodemcuService.getAll().subscribe((res) => {
-        this.nodemcu = res;
-        this.dataGraph = [];
-        this.countGraph = [];
-        this.MediaHorarioRealizada = 0;
-        this.TCmedioRealizado = 0;
-        this.getRealizado();
-      });
-      this.dataAtual = new Date();
-
+    this.intervaloImposto = setInterval(() => {
+      this.impostoIntervalo()
     }, 1000);
+    this.intervaloRealizado = setInterval(() => {
+      this.realizadoIntevalo()
+    }, 5000);
+    
     setInterval(() => {
-      this.nodemcuService.getAllRealizado().subscribe((res) => {
-        this.realizadoHora = res[0];
-      });
-      this.mainService.getAllMain().subscribe((res) => {
-        this.imposto = res[0].imposto;
-      });
-      this.modeloService.getAll().subscribe(res => {
-        res.forEach(item => {
-          if (item.is_current == true) {
-            this.modeloAtual = item
-          }
-        })
+      if (this.horasAtuais == 17 && new Date().getMinutes() == 0) {
+        console.log("teste")
+        clearInterval(this.intervaloImposto)
+        clearInterval(this.intervaloRealizado)
+      } else if(this.horasAtuais == 7 && new Date().getMinutes() == 0 && new Date().getSeconds() == 0){
+        console.log("teste 2")
+        this.intervaloImposto = setInterval(() => {
+          this.impostoIntervalo()
+        }, 1000)
 
+        this.intervaloRealizado = setInterval(() => {
+          this.realizadoIntevalo();
+        }, 5000)
+      }
+    }, 1000)
+  }
+
+  realizadoIntevalo() {
+    this.nodemcuService.getAllRealizado().subscribe((res) => {
+      this.realizadoHora = res[0];
+    });
+    this.mainService.getAllMain().subscribe((res) => {
+      this.imposto = res[0].imposto;
+    });
+    this.modeloService.getAll().subscribe(res => {
+      res.forEach(item => {
+        if (item.is_current == true) {
+          this.modeloAtual = item
+        }
       })
-      this.nodemcu.forEach(item => {
-        if (item.nameId.pausa == true) {
-          if (!this.dialog.openDialogs.length) {
-            this.dialogRef = this.dialog.open(DialogPauseComponent, {
-              width: '900px',
-              height: '400px'
-            });
-          }
-        } else {
-          if (this.dialog.openDialogs.length) {
-            this.dialogRef.close()
+
+    })
+    this.nodemcu.forEach(item => {
+      if (item.nameId.pausa == true) {
+        if (!this.dialog.openDialogs.length) {
+          this.dialogRef = this.dialog.open(DialogPauseComponent, {
+            width: '900px',
+            height: '400px'
+          });
+        }
+      } else {
+        if (this.dialog.openDialogs.length) {
+          this.dialogRef.close()
+        }
+      }
+    });
+  }
+  
+  impostoIntervalo() {
+    this.impostodivididoporshift = (this.imposto / this.shiftTime / 60);
+    this.diaDaSemanda = new Date();
+    this.horasAtuais = new Date().getHours();
+    this.mainService.getControleRealizadoByDate().subscribe((res) => {
+      res.forEach((item) => {
+        if (new Date(item.data).getDay() === new Date().getDay()) {
+          if (item.realizadoHora == 7) {
+            this.minutos.minutos7 = true;
+          } else if (item.realizadoHora == 8) {
+            this.minutos.minutos8 = true;
+          } else if (item.realizadoHora == 9) {
+            this.minutos.minutos9 = true;
+          } else if (item.realizadoHora == 10) {
+            this.minutos.minutos10 = true;
+          } else if (item.realizadoHora == 11) {
+            this.minutos.minutos11 = true;
+          } else if (item.realizadoHora == 12) {
+            this.minutos.minutos12 = true;
+          } else if (item.realizadoHora == 13) {
+            this.minutos.minutos14 = true;
+          } else if (item.realizadoHora == 14) {
+            this.minutos.minutos13 = true;
+          } else if (item.realizadoHora == 15) {
+            this.minutos.minutos15 = true;
+          } else if (item.realizadoHora == 16) {
+            this.minutos.minutos16 = true;
+          } else if (item.realizadoHora == 17) {
+            this.minutos.minutos17 = true;
           }
         }
       });
-    }, 5000);
+      if (this.horasAtuais == 7) {
+        this.minutos8 = new Date().getMinutes();
+      } else if (this.horasAtuais == 8) {
+        this.minutos8 = 60;
+        this.minutos9 = new Date().getMinutes();
+      } else if (this.horasAtuais == 9) {
+        if (
+          this.realizadoHora.horas7 <
+          this.minutos8 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos8) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas7,
+              this.minutos8 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = new Date().getMinutes();
+      } else if (this.horasAtuais == 10) {
+        if (
+          this.realizadoHora.horas8 <
+          this.minutos9 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos9) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas8,
+              this.minutos9 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = new Date().getMinutes();
+      } else if (this.horasAtuais == 11) {
+        if (
+          this.realizadoHora.horas9 <
+          this.minutos10 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos10) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas9,
+              this.minutos10 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = new Date().getMinutes();
+      } else if (this.horasAtuais == 12) {
+        if (
+          this.realizadoHora.horas10 <
+          this.minutos11 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos11) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas10,
+              this.minutos11 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = 60;
+        this.minutos13 = new Date().getMinutes();
+      } else if (this.horasAtuais == 13) {
+        if (
+          this.realizadoHora.horas11 <
+          this.minutos12 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos12) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas11,
+              this.minutos12 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = 60;
+        this.minutos13 = 60;
+        this.minutos14 = new Date().getMinutes();
+      } else if (this.horasAtuais == 14) {
+        if (
+          this.realizadoHora.horas12 <
+          this.minutos13 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos13) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas12,
+              this.minutos13 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = 60;
+        this.minutos13 = 60;
+        this.minutos14 = 60;
+        this.minutos15 = new Date().getMinutes();
+      } else if (this.horasAtuais == 15) {
+        if (
+          this.realizadoHora.horas13 <
+          this.minutos14 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos14) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas13,
+              this.minutos14 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = 60;
+        this.minutos13 = 60;
+        this.minutos14 = 60;
+        this.minutos15 = 60;
+        this.minutos16 = new Date().getMinutes();
+      } else if (this.horasAtuais == 16) {
+        if (
+          this.realizadoHora.horas14 <
+          this.minutos15 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos15) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas14,
+              this.minutos15 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = 60;
+        this.minutos13 = 60;
+        this.minutos14 = 60;
+        this.minutos15 = 60;
+        this.minutos16 = 60;
+        this.minutos17 = new Date().getMinutes();
+      } else if (this.horasAtuais == 17) {
+        if (
+          this.realizadoHora.horas15 <
+          this.minutos16 * (this.imposto / this.shiftTime / 60) - 0.5
+        ) {
+          if (!this.minutos.minutos16) {
+            this.openDialogControleRealizado(
+              this.realizadoHora.horas15,
+              this.minutos16 * (this.imposto / this.shiftTime / 60) - 0.5,
+              this.horasAtuais - 1
+            );
+          }
+        }
+        this.minutos8 = 60;
+        this.minutos9 = 60;
+        this.minutos10 = 60;
+        this.minutos11 = 60;
+        this.minutos12 = 60;
+        this.minutos13 = 60;
+        this.minutos14 = 60;
+        this.minutos15 = 60;
+        this.minutos16 = 60;
+        this.minutos17 = 60;
+      }
+    });
+
+
+    const currentDate = new Date();
+    const newDatehours = new Date(currentDate.getTime() - 7 * 60 * 60 * 1000);
+    const hours1 = newDatehours.getHours();
+    const minutes1 = newDatehours.getMinutes();
+    this.date = hours1 * 60 + minutes1;
+
+    this.effectiveTime = this.date;
+
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+
+    this.hours = `${hours}:${minutes}`;
+    this.getValues();
+
+
+    this.nodemcuService.getAll().subscribe((res) => {
+      this.nodemcu = res;
+      this.counting[50] += 1
+      this.nodemcu.forEach(item => {
+        if(item.isCounting == true){
+          this.counting[item.id] += 1;
+        }else{
+          this.counting[item.id] = 0;
+        }
+      })
+      this.dataGraph = [];
+      this.countGraph = [];
+      this.MediaHorarioRealizada = 0;
+      this.TCmedioRealizado = 0;
+      this.getRealizado();
+    });
+    this.dataAtual = new Date();
   }
 
   openDialogControleRealizado(
@@ -452,6 +491,9 @@ export class HomeComponent implements OnInit {
     if (this.horasAtuais < 12 || this.horasAtuais >= 13) {
       this.previsto =
         this.date / (this.TCimpostado / 60) - this.ProportionalDiscount;
+    }
+    if(this.horasAtuais >= 17 && this.horasAtuais < 7){
+      this.previsto = this.imposto
     }
 
     if (this.isPrevisto == false) {
