@@ -16,8 +16,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatChipsModule} from '@angular/material/chips';
 import { DialogFonteComponent } from './shared/dialog-fonte/dialog-fonte.component';
-import { ErrorRouterComponent } from './pages/error-router/error-router.component';
-import { QrcodeCounterComponent } from './pages/qrcode-counter/qrcode-counter.component';
 import { DialogAvisoComponent } from './shared/dialog-aviso/dialog-aviso.component';
 import { AnaliseComponent } from './pages/analise/analise.component';
 
@@ -27,8 +25,6 @@ import { AnaliseComponent } from './pages/analise/analise.component';
     CounterComponent,
     DialogHelpComponent,
     DialogFonteComponent,
-    ErrorRouterComponent,
-    QrcodeCounterComponent,
     DialogAvisoComponent,
     AnaliseComponent,
   ],

@@ -20,8 +20,15 @@ public class FontesController {
     FontesRepository repository;
 
     @GetMapping()
-    public List<FontesModel> listAll() {
-        return repository.findAll();
+    public FontesModel listAll() {
+        List<FontesModel> fontes = repository.findAll();
+
+        for(FontesModel fonte: fontes){
+            if (fonte.getIs_current()){
+                return fonte;
+            }
+        }
+        return fontes.get(0);
     }
 
     @Transactional

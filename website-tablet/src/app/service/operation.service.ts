@@ -87,24 +87,8 @@ export class OperationService {
 
   getFonteAtual(): Promise<Modelo> {
     return new Promise((resolve, reject) => {
-      let modeloAtual: Modelo;
-      this.http.get<Modelo[]>(environment.url + "fonte").subscribe(res => {
-        res.forEach((item: Modelo) => {
-          if (item.is_current == true) {
-            modeloAtual = item;
-            resolve(modeloAtual);
-          }
-        });
-        if (modeloAtual == undefined) {
-          modeloAtual = {
-            modelo: "string",
-            realizado: 0,
-            tempo: 0,
-            is_current: true
-          };
-          this.changeIsCurrent('bob120', true);
-          resolve(modeloAtual);
-        }
+      this.http.get<Modelo>(environment.url + "fonte").subscribe(res => {
+        resolve(res);
       });
     });
   }

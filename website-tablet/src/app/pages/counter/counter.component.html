@@ -21,9 +21,7 @@
     <button *ngIf="loadingButton" disabled="true">AGUARDE</button>
     <button (click)="toggleContagem('count')" *ngIf="stateButton && loadingButton == false"
       [disabled]="onPausa || onAnalise || onFonteGrande || onAjuda">INICIAR</button>
-    <button [disabled]="stateButton" (click)="toggleContagem('refuse')">REFUGO<input class="inputGeral"
-        onfocus="this.removeAttribute('readonly');" readonly="readonly" [(ngModel)]="qrcodeValue"
-        (keyup)="qrCodeStart()" #meuInput type="text" autofocus></button>
+    <button [disabled]="stateButton" (click)="toggleContagem('refuse')">REFUGO</button>
     <button (click)="openDialog()">TUTORIAL</button>
   </div>
   <table class="realizado"

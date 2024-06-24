@@ -1,34 +1,28 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatChip } from '@angular/material/chips';
-import { MatChipsModule } from '@angular/material/chips/chips-module';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { delay } from 'rxjs';
 import { Main } from 'src/app/model/main';
 import { Nodemcu } from 'src/app/model/nodemcu';
 import { Operation } from 'src/app/model/operation/operation';
 import { Realizado } from 'src/app/model/realizado';
 import { OperationService } from 'src/app/service/operation.service';
-import { SheetsService } from 'src/app/service/sheets.service';
 import { DialogHelpComponent } from 'src/app/shared/dialog-help/dialog-help.component';
-import { HostListener } from '@angular/core';
 import { DialogAvisoComponent } from 'src/app/shared/dialog-aviso/dialog-aviso.component';
-import { state } from '@angular/animations';
+
+
 @Component({
   selector: 'app-counter',
   templateUrl: './counter.component.html',
   styleUrls: ['./counter.component.scss'],
 })
-export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CounterComponent implements OnInit, OnDestroy {
   // Fazendo a Injeção de Dependências
   constructor(
     private operationService: OperationService,
     private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private sheetsService: SheetsService,
-    private router: Router
   ) { }
   // Declarando as váriaveis
   imposto: number = 0;
@@ -70,9 +64,7 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
   newMaintenance: number = 0;
   nomeOperador: string = ''
   qrcodeValue: string = ''
-  qrcodeProduto: string = ""
   analiseButton: boolean = false;
-  onQrcode: boolean = false;
   onAnalise: boolean = false;
   onFonteGrande: boolean = false;
   onPausa: boolean = false;
@@ -86,25 +78,9 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
   };
   // Declaro a variavel storage que vai armazenar o local Storage
   storage: Storage = localStorage;
-  // Depois que o site carregar ele manda a requisição para deixar ocupado a operação
-  @HostListener('window:beforeunload', ['$event'])
-  async onBeforeUnload(event: Event) {
-    this.operationService
-      .atualizarOcupado(this.nomeOperacao.toString(), false)
-      .subscribe();
-  }
-  // Pego o input do HTML
-  @ViewChild('meuInput') meuInputRef!: ElementRef;
 
-  ngAfterViewInit(): void {
-    // this.meuInputRef.nativeElement.focus();
-  }
   // Quando o site iniciar ele vai executar tudo que esta aqui dentro
   ngOnInit() {
-
-    setInterval(() => {
-      // this.meuInputRef.nativeElement.focus();
-    }, 100)
     this.nomeOperador = this.storage.getItem("nome")!;
     // Pega os parametros das rotas para saber qual operação
     this.route.params.subscribe(
@@ -113,38 +89,8 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
         // Faz a requisição para pegar todos os dados da operação
         this.operationService.get(params['name']).subscribe(
           (res) => {
-            // Se a resposta der erro ele redireciona para a mesma rota para tentar de novo
-            if (res == null) {
-              this.router.navigate([
-                `http://172.16.34.229:4200/counter/${this.nomeOperacao}`,
-              ]);
-            }
             this.operation = res;
             this.desligarOperacaoNaFonteGrande();
-
-            if (this.storage.getItem('nome')?.length! < 2) {
-              if (this.operation.name == '080') {
-                this.router.navigate(['/qrcode/080'])
-                return;
-              } else if (this.operation.name == '100') {
-                this.router.navigate(['/qrcode/100'])
-                return;
-              } else if (this.operation.name == '110') {
-                this.router.navigate(['/qrcode/110'])
-                return;
-              } else if (this.operation.name == '090') {
-                this.router.navigate(['/qrcode/090'])
-                return;
-              }
-            }
-
-
-            // if (this.operation.ocupado == true && this.operation.name != '020') {
-            //   this.router.navigate(['/error']);
-            // }
-            this.operationService
-              .atualizarOcupado(this.nomeOperacao.toString(), true)
-              .subscribe();
             
             this.operationService.getByName(this.operation.name).subscribe(
               (res) => {
@@ -175,11 +121,6 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.openSnackBar('Erro no Service', 'Ok');
               }
             );
-          },
-          (errr) => {
-            this.router.navigate([
-              `http://172.16.34.229:4200/counter/${this.nomeOperacao}`,
-            ]);
           }
         );
         this.operationService
@@ -187,11 +128,6 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
           .subscribe((res: any) => {
             this.realizadoHora = res;
           });
-      },
-      (errr) => {
-        this.router.navigate([
-          `http://172.16.34.229:4200/counter/${this.nomeOperacao}`,
-        ]);
       }
     );
     this.operationService.getTCimposto().subscribe(
@@ -222,17 +158,6 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
       const data = new Date();
       if (data.getMinutes() == 0 && this.verificarSeFoiUmaVez == true) {
         this.verificarSeFoiUmaVez = false;
-        // var body: Nodemcu = {
-        //   count: this.newConter,
-        //   time: 0,
-        //   state: 'verde',
-        //   currentTC: this.contador,
-        //   nameId: this.operation,
-        //   maintenance: this.newMaintenance,
-        //   shortestTC: this.contador,
-        //   modelo: this.labelPosition,
-        // };
-        // this.sheetsService.submitForm(body, true).subscribe();
         this.newConter = 0;
         this.newMaintenance = 0;
         this.storage.setItem('counter', this.newConter.toString());
@@ -415,25 +340,9 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
         this.minutos17 = 60;
         this.minutos17 = new Date().getMinutes();
       }
-    }, 1000);
+    }, 2000);
   }
 
-  qrCodeStart() {
-    this.onQrcode = true;
-    this.qrcodeProduto = this.qrcodeValue
-    if (
-      (this.qrcodeValue[0] == "J" && this.qrcodeValue[1] == "f" && this.qrcodeValue[2] == "a") || (this.qrcodeValue[0] == "J" && this.qrcodeValue[1] == "F" && this.qrcodeValue[2] == "a") || (this.qrcodeValue[0] == "J" && this.qrcodeValue[1] == "f" && this.qrcodeValue[2] == "A") || (this.qrcodeValue[0] == "J" && this.qrcodeValue[1] == "F" && this.qrcodeValue[2] == "A") ||
-      (this.qrcodeValue[0] == "j" && this.qrcodeValue[1] == "F" && this.qrcodeValue[2] == "a") || (this.qrcodeValue[0] == "j" && this.qrcodeValue[1] == "F" && this.qrcodeValue[2] == "A") || (this.qrcodeValue[0] == "j" && this.qrcodeValue[1] == "f" && this.qrcodeValue[2] == "A") || (this.qrcodeValue[0] == "j" && this.qrcodeValue[1] == "f" && this.qrcodeValue[2] == "a")
-    ) {
-
-      this.toggleContagem('count');
-      this.qrcodeValue = ''
-      // this.meuInputRef.nativeElement.focus();
-    }
-    setTimeout(() => {
-      this.qrcodeValue = ""
-    }, 100);
-  }
 
 
   enterFullscreen() {
@@ -447,7 +356,6 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
   intervaloCounter() {
     this.intervalo = setInterval(() => {
       if (!this.contadorRodando && this.analiseButton != true && this.onAnalise != true && this.onFonteGrande != true) {
-        console.log(this.tempoOcioso)
         if (this.tempoOcioso > this.limitedTimeOcioso) {
           if (!this.vermelhoStateCalled) {
             this.operationService.atualizarState(this.operation.name, 'vermelho');
@@ -487,28 +395,12 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.tempoOcioso = 0;
     if (this.contadorRodando) {
       if (this.contador >= 15) {
-        console.log(this.onQrcode)
-        if (this.onQrcode) {
-          var qrcodeState = false;
-          if (
-            state == "refuse") {
-            console.log(qrcodeState)
-            qrcodeState = false;
-          } else {
-            qrcodeState = true;
-          }
-          this.operationService.postQrcode(this.nomeOperador, this.qrcodeProduto, qrcodeState, this.operation.name, this.contador).subscribe(res => {
-
-          })
-          this.onQrcode = false;
-        }
         this.tempoOcioso = 0;
         this.intervaloCounter();
         this.stopTimer(state);
         this.stateButton = true;
         this.contador = 0;
         this.operationService.atualizar(this.operation.name, false);
-        // this.meuInputRef.nativeElement.focus();
       } else {
         this.openDialogAviso();
         this.operationService.postIndisponivel(this.operation.name).subscribe()
@@ -624,18 +516,6 @@ export class CounterComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.contador = 0; // Reseta o contador para 0 quando a contagem é parada
     this.operationService.atualizar(this.operation.name, false);
-    var body: Nodemcu = {
-      count: this.newConter,
-      time: 0,
-      state: 'verde',
-      currentTC: this.contador,
-      nameId: this.operation,
-      maintenance: this.newMaintenance,
-      shortestTC: this.contador,
-      modelo: this.labelPosition,
-      isCounting: false
-    };
-    this.sheetsService.submitForm(body, false).subscribe();
   }
 
   openSnackBar(message: string, action: string) {

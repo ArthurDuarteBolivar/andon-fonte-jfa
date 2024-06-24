@@ -96,8 +96,6 @@ export class HomeComponent implements OnInit {
   realizado7 = 0
   
   ngOnInit(): void { 
-
-    
     this.modeloService.getAll().subscribe(res => {
       res.forEach(item => {
         if (item.is_current == true) {
