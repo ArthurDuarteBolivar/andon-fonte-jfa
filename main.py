@@ -60,6 +60,7 @@
 # capture_and_move_screenshot()
 
 
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 import time
@@ -81,7 +82,7 @@ def capture_and_move_screenshot():
     driver = webdriver.Chrome(service=service)
     driver.maximize_window()
     pyautogui.press('f11')
-
+    driver.execute_script("document.body.style.zoom='70%'")
     # Acessando a URL
     driver.get("http://172.16.34.147:4300/")
     time.sleep(6)
@@ -107,13 +108,14 @@ def capture_and_move_screenshot():
 def send_email_with_attachment(file_name):
     requests.get(f"http://172.16.34.147:9002/?nome={file_name}")
 
-# Agendar a execução do código todos os dias às 13:19 horas
-schedule.every().day.at("17:30:00").do(capture_and_move_screenshot)
+# Agendar para executar a função uma vez no horário desejado
+schedule.every().monday.at("17:00:30").do(capture_and_move_screenshot)
+schedule.every().tuesday.at("17:00:30").do(capture_and_move_screenshot)
+schedule.every().wednesday.at("16:30:30").do(capture_and_move_screenshot)
+schedule.every().thursday.at("17:00:30").do(capture_and_move_screenshot)
+schedule.every().friday.at("16:00:30").do(capture_and_move_screenshot)
 
-# Loop para manter o script rodando e verificando o agendamento
+# Mantenha o loop para manter o script em execução
 while True:
     schedule.run_pending()
-    time.sleep(1)
-
-# Executar a função imediatamente para teste
-capture_and_move_screenshot()
+    time.sleep(10)

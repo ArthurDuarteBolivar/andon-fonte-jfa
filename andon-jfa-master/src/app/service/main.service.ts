@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Main } from '../module/main';
 import { environment } from 'src/environments/environment.development';
 import { RealizadoGeral } from '../module/realizadoGeral';
@@ -33,6 +33,8 @@ export class MainService {
   }
 
   getControleRealizadoByDate(): Observable<RealizadoGeral[]>{
-    return this.http.get<RealizadoGeral[]>(environment.url + "realizado")
+    // return this.http.get<RealizadoGeral[]>(environment.url + "realizado")
+    const realizadoGeral: RealizadoGeral[] = []
+    return of(realizadoGeral);
   }
 }

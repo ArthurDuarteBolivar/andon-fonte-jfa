@@ -23,9 +23,9 @@ public class NodemcuModel {
     @JoinColumn(name = "name_id")
     private OperationModel nameId;
 
-    @ManyToOne
-    @JoinTable(name = "fontesId")
-    private FontesModel fontesId;
+    // @ManyToOne
+    // @JoinTable(name = "fontesId")
+    // private FontesModel fontesId;
 
     private Integer count;
 
@@ -47,6 +47,8 @@ public class NodemcuModel {
 
     private Integer secondtlastTC;
 
+    private Integer ajuda;
+
     private Integer thirdlastTC;
 
     private Integer shortestTC;
@@ -56,6 +58,8 @@ public class NodemcuModel {
     private Integer TCmedio;
 
     private Integer localTC;
+
+    private Boolean isCounting;
 
     @PrePersist
     protected void prePersist() {

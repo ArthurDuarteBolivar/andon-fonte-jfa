@@ -31,9 +31,18 @@ public class OperationController {
         return operation;
     }
 
+    @GetMapping()
+    public List<OperationModel> getAll(){
+        return repository.findAll();
+    }
+
+
     @GetMapping("/{name}")
     public OperationModel getByName(@PathVariable String name) {
-        return repository.findByName(name);
+        if(name != ""){
+            return repository.findByName(name);
+        }
+        return new OperationModel();
     }
 
 

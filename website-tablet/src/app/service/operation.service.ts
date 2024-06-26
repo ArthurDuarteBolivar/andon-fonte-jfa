@@ -42,7 +42,6 @@ export class OperationService {
 
   atualizar(name: string, tempo: number) {
     this.http.get(environment.url + "nodemcu/atualizarTempo/" + name + "/" + tempo).subscribe()
-
   }
 
   atualizarState(name: string, state: string) {
@@ -102,12 +101,13 @@ export class OperationService {
             tempo: 0,
             is_current: true
           };
-          this.changeIsCurrent('bob120', true);
+          this.changeIsCurrent('bob 120A', true);
           resolve(modeloAtual);
         }
       });
     });
   }
+  
   
   changeIsCurrent(modelo: string, isCurrent: boolean): void {
     this.http.get(environment.url + "fonte/" + modelo + "/" + isCurrent).subscribe()
@@ -123,6 +123,12 @@ export class OperationService {
   changeTimeExcess(name: string){
     this.http.get(environment.url + "nodemcu/timeExcess/" + name).subscribe()
   }
+  changeAjuda(name: string){
+    this.http.get(environment.url + "nodemcu/ajuda/" + name).subscribe()
+  }
+
+  getAll(): Observable<Operation[]>{
+    return this.http.get<Operation[]>(environment.url + "operation")
+  }
 
 }
-

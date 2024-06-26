@@ -21,14 +21,31 @@ public class FontesController {
 
     @GetMapping()
     public List<FontesModel> listAll() {
-        return repository.findAll();
+        List<FontesModel> fontes = repository.findAll();
+        return fontes;
     }
+
+    @GetMapping("/isCurrent")
+    public FontesModel findByIsCurrent() {
+        List<FontesModel> fontes = repository.findAll();
+
+        for(FontesModel fonte: fontes){
+            if (fonte.getIs_current()){
+                return fonte;
+            }
+        }
+        return fontes.get(0);
+    }
+
 
     @Transactional
     @GetMapping("/{modelo}/{isCurrent}")
     public void Update(@PathVariable String modelo, @PathVariable Boolean isCurrent) {
-        FontesModel fontes = repository.findBymodelo(modelo);
-        fontes.setIs_current(isCurrent);
+        if(modelo != ""){
+            FontesModel fontes = repository.findBymodelo(modelo);
+            fontes.setIs_current(isCurrent);
+            repository.save(fontes);
+        }
     }
 
     @PostMapping()

@@ -395,7 +395,6 @@ public class TimerService {
             repository.save(device);
         }
 
-// Continue with the remaining conditional statements for "160" in a similar manner
 
         if ("160".equals(name)) {
             OperationModel operation = operationRepository.findByName("160");

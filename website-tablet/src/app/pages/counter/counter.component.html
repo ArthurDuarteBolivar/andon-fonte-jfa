@@ -1,10 +1,8 @@
-<!-- <input type="text" autofocus class="inputGeral"> -->
-<button class="analiseButton" (click)="analise()" *ngIf="!onAjuda">Analise</button>
+<!-- <button class="analiseButton" (click)="analise()" *ngIf="!onAjuda">Analise</button> -->
 <button class="ajuda" (click)="ajuda()" *ngIf="!onAnalise">ajuda</button>
 <section (click)="enterFullscreen()" [ngClass]="{'animationBlue': azulStateCalled}"
-  [ngClass]="{'animationRed': vermelhoStateCalled || lmitedTime && contador > lmitedTime}">
+  [ngClass]="{'animationRed': vermelhoStateCalled || this.contador > lmitedTime}">
 
-  <!--<span *ngIf="nomeOperador != ''">Nome: {{nomeOperador}}</span> -->
   <div class="info">
     <div>
       <h1>REALIZADO: {{count}}</h1>
@@ -21,9 +19,7 @@
     <button *ngIf="loadingButton" disabled="true">AGUARDE</button>
     <button (click)="toggleContagem('count')" *ngIf="stateButton && loadingButton == false"
       [disabled]="onPausa || onAnalise || onFonteGrande || onAjuda">INICIAR</button>
-    <button [disabled]="stateButton" (click)="toggleContagem('refuse')">REFUGO<input class="inputGeral"
-        onfocus="this.removeAttribute('readonly');" readonly="readonly" [(ngModel)]="qrcodeValue"
-        (keyup)="qrCodeStart()" #meuInput type="text" autofocus></button>
+    <button [disabled]="stateButton" (click)="toggleContagem('refuse')">REFUGO</button>
     <button (click)="openDialog()">TUTORIAL</button>
   </div>
   <table class="realizado"

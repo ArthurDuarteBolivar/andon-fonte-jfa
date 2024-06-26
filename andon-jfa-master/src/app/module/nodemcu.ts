@@ -18,4 +18,6 @@ export interface Nodemcu {
     localTC: number;
     analise: number;
     time_excess: number;
+    ajuda: number;
+    isCounting: boolean;
 }

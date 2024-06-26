@@ -17,7 +17,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
 import { HomeComponent } from './pages/home/home.component';
-import { ControleGeralComponent } from './pages/controle-geral/controle-geral.component';
 import { PausaComponent } from './pages/pausa/pausa.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { DialogPauseComponent } from './shared/dialog-pause/dialog-pause.component';
@@ -28,7 +27,6 @@ import { DialogControleRealizadoComponent } from './shared/dialog-controle-reali
     AppComponent,
     DialogMetaComponent,
     HomeComponent,
-    ControleGeralComponent,
     PausaComponent,
     DialogPauseComponent,
     DialogControleRealizadoComponent

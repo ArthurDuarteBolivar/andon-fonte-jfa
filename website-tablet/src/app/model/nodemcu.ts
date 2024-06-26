@@ -11,4 +11,5 @@ export interface Nodemcu {
     maintenance: number; 
     shortestTC: number; 
     modelo: string;
+    isCounting: boolean
 }

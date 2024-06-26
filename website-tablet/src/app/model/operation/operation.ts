@@ -4,4 +4,5 @@ export interface Operation {
     limitedTime: number;
     ocupado: boolean;
     pausa: boolean;
+    analise: boolean;
 }

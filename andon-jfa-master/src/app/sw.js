@@ -10,11 +10,11 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Evento 'install': é acionado quando o Service Worker é instalado
+
 self.addEventListener('install', function(event) {
 });
 
-// Limpa o cache do Service Worker
+
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(cacheNames) {

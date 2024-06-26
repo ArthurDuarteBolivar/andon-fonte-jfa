@@ -60,15 +60,13 @@ public class NodemcuController {
     private ScheduledExecutorService scheduler;
 
     public NodemcuController() {
-        System.out.println("passou 1");
         this.scheduler = Executors.newScheduledThreadPool(1);
         agendarTarefa();
     }
 
     private void agendarTarefa() {
-        System.out.println("passou 2");
         Runnable task = () -> {
-            System.out.println("IsCalling");
+            
             Calendar calendar = Calendar.getInstance();
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -87,8 +85,6 @@ public class NodemcuController {
         return repository.findAll();
     }
 
-
-
     @GetMapping("/{name}")
     public NodemcuModel findByName(@PathVariable String name) {
         OperationModel operation = operationRepository.findByName(name);
@@ -102,8 +98,18 @@ public class NodemcuController {
         NodemcuModel nodemcu = repository.findByNameId(operation);
         nodemcu.setState("piscar");
         nodemcu.setTime_excess(nodemcu.getTime_excess() + 1);
+        repository.save(nodemcu);
+    }
+
+    @GetMapping("/ajuda/{name}")
+    public void AddAjuda(@PathVariable String name){
+        OperationModel operation = operationRepository.findByName(name);
+        NodemcuModel nodemcu = repository.findByNameId(operation);
+        nodemcu.setState("piscar_azul");
+        nodemcu.setAjuda(nodemcu.getAjuda() + 1);
         repository.save((nodemcu));
     }
+
 
 
 
@@ -120,18 +126,19 @@ public class NodemcuController {
         OperationModel operation = operationRepository.findByName(name);
         NodemcuModel device = repository.findByNameId(operation);
 
+        
         if (device == null) {
             repository.save(nodemcuUpdates);
             return nodemcuUpdates;
         }
-
+        
         device.setThirdlastTC(device.getSecondtlastTC());
         device.setSecondtlastTC(device.getFirtlastTC());
         device.setFirtlastTC(device.getCurrentTC());
 
         Float tcimposto = mainRepostory.findById(1).get().getTCimposto();
-        if(nodemcuUpdates.getNameId().getName().equals("100") || nodemcuUpdates.getNameId().getName().equals("110")){
-            tcimposto = tcimposto * 2;
+        if(nodemcuUpdates.getNameId().getName().equals("100") || nodemcuUpdates.getNameId().getName().equals("110")|| nodemcuUpdates.getNameId().getName().equals("080")|| nodemcuUpdates.getNameId().getName().equals("090")){
+            tcimposto = 180F;
         }
         if (device.getShortestTC() > nodemcuUpdates.getShortestTC() && nodemcuUpdates.getShortestTC() > 10) {
             device.setShortestTC(nodemcuUpdates.getShortestTC());
@@ -140,9 +147,9 @@ public class NodemcuController {
             excedido++;
             device.setQtdeTCexcedido(excedido);
         }
-
+        
         Integer media = (device.getTCmedio() + nodemcuUpdates.getCurrentTC()) / 2;
-
+        
         device.setTCmedio(media);
         device.setCount(nodemcuUpdates.getCount());
         device.setState(nodemcuUpdates.getState());
@@ -158,7 +165,7 @@ public class NodemcuController {
                 throw new RuntimeException("Erro ao salvar o dispositivo no banco de dados", e);
             }
         }
-
+        
         try {
             NodemcuModel savedDevice = repository.save(device);
             if (savedDevice != null) {
@@ -171,7 +178,7 @@ public class NodemcuController {
             throw new RuntimeException("Erro ao salvar o dispositivo no banco de dados", e);
         }
     }
-
+    
     @Transactional
     @GetMapping("/atualizarState/{name}/{state}")
     public void atualizarCor(@PathVariable("name") String name, @PathVariable("state") String state) {
@@ -274,6 +281,7 @@ public class NodemcuController {
     }
 
     public void RealizadoHorariaTablet(String name) {
+        
         Date agora = new Date();
         SimpleDateFormat formatador = new SimpleDateFormat("HH");
         Integer horaFormatada = Integer.parseInt(formatador.format(agora));
@@ -282,6 +290,7 @@ public class NodemcuController {
         OperationModel operation = operationRepository.findByName(name);
         realizado = realizadoHorariaTabletRepository.findByNameId(operation);
         NodemcuModel device = repository.findByNameId(operation);
+        
         switch (horaFormatada) {
             case 7:
                 hour = realizado.getHoras7();
@@ -371,20 +380,6 @@ public class NodemcuController {
         repository.updateLocalTCByNameId(tempo, operation.getId());
     }
 
-    // @GetMapping("/atualizarTempo/{name}/{tempo}")
-    // public void iniciarTempo(@PathVariable("name") String name,
-    // @PathVariable("tempo") Integer tempo) {
-    // OperationModel operation = operationRepository.findByName(name);
-    // NodemcuModel device = repository.findByNameId(operation);
-    // if(tempo == 0){
-    // device.setLocalTC(0);
-    // repository.save(device);
-    // return;
-    // }
-    // device.setLocalTC(tempo);
-    // repository.save(device);
-    // }
-
     public void zerarDados() {
         if (zerouDados) {
             try{
@@ -397,7 +392,7 @@ public class NodemcuController {
                 controleGeral.setData(new Date());
                 controleGeralRepository.save(controleGeral);
 
-                System.out.println("zerou dados");
+                
                 Optional<RealizadoHorariaModel> realizadoReset = realizadoHorariaRepository.findById(1);
                 realizadoReset.ifPresent(reset -> {
                     reset.setHoras12(0);
@@ -429,6 +424,7 @@ public class NodemcuController {
                     nodemcu.setCount(0);
                     nodemcu.setTime_excess(0);
                     nodemcu.setAnalise(0);
+                    nodemcu.setAjuda(0);
                     repository.save(nodemcu);
                 }
 

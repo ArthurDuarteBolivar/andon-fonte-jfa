@@ -22,14 +22,18 @@ export class PausaComponent implements OnInit {
     this.nodemcuService.pausa(true).subscribe();
     this.openSnackBar("Pausado com sucesso");
   
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-          console.log('ServiceWorker registration failed: ', err);
-        });
+   // Registrar o Service Worker
+   if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        // Registro do Service Worker bem-sucedido
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        // Falha no registro do Service Worker
+        console.log('ServiceWorker registration failed: ', err);
+        console.log(Cache)
       });
+    });
     }
   
     setTimeout(() => {

@@ -62,18 +62,16 @@ section {
       padding-right: 0.5rem;
     }
     
-    td { 
+    td {
       position: relative;
-      padding: 0;
       min-width: 42px;
       min-height: 22px;
-      max-width: 72px;
-      max-height: 32px;
-      width: 60px;
-      font-weight: 700;
+      max-width: 82px;
+      max-width: 42px;
+      font-weight: 800;
       color: black;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 2rem;
       span{
         position: absolute;
         font-size: 1.2rem;
@@ -85,8 +83,13 @@ section {
         left: 0;
       }
       span:nth-child(2){
-        color: red;
+        color: white;
         bottom: 0;
+        right: 0;
+      }
+      span:nth-child(3){
+        color:purple;
+        top: 0;
         right: 0;
       }
     }
@@ -102,12 +105,17 @@ section {
       flex: 1;
       margin: 0 5px;
       text-align: center;
-      font-size: 1.3rem;
+      font-size: 1rem;
       font-weight: 400;
       button{
+        color: black;
         font-size: 1.3rem;
         font-weight: 400;
       }
+    }
+    div:nth-child(1){
+      background-color: #00ff00;
+      color: black ;
     }
   }
   .div3 {
@@ -154,7 +162,7 @@ section {
       flex: 1;
       margin: 0 5px;
       text-align: center;
-      font-size: 1.3rem;
+      font-size: 1rem;
       font-weight: 400;
     }
   }
@@ -246,4 +254,9 @@ section {
     100%{
       background-color: #00ff00;
     }
+  }
+
+  img{
+    width: 15px;
+    height: 15px;
   }
