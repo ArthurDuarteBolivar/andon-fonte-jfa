@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 
 // Configurar o caminho para os arquivos estáticos do Angular
-const angularPath = 'C:\\andon-jfa-project-finish\\website-tablet\\dist\\website-tablet';
+const angularPath = 'C:\\andon-jfa-fonte-oficial\\andon-jfa-fonte-oficial\\website-tablet\\dist\\website-tablet';
 app.use(express.static(angularPath));
 
 // Rota para servir o arquivo index.html do Angular

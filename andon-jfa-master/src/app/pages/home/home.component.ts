@@ -512,7 +512,6 @@ export class HomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log(result)
         var newImposto = result.split(',')[0];
         if (newImposto != 0) {
           this.imposto = result.split(',')[0];

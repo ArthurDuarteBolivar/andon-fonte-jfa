@@ -1,27 +1,15 @@
-import "dotenv/config";
-import { Service } from 'node-windows';
+var Service = require('node-windows').Service;
 
-const svc = new Service({
-  name: 'agent name',
-  description: 'Agente que envia dados para a aplicação online',
-  script: 'C:\\andon-jfa-project-finish\\andon-jfa-master\\dist\\andon',
-  env: [
-    {
-      name: "DATA_BASE_CLIENT",
-      value: process.env.DATA_BASE_CLIENT
-    },
-    {
-      name: "DATA_BASE_HOST",
-      value: process.env.DATA_BASE_HOST
-    },
-    {
-      name: "DATA_BASE_NAME",
-      value: process.env.DATA_BASE_NAME
-    }
-  ]
+// Create a new service object
+var svc = new Service({
+  name:'andonfonte',
+  description: 'Fonte Tablet',
+  script: 'C:\\andon-jfa-fonte-oficial\\andon-jfa-fonte-oficial\\andon-jfa-master\\src\\app\\express.js'
 });
-
-svc.on('install', () => {
+console.log("teste")
+// Listen for the "install" event, which indicates the
+// process is available as a service.
+svc.on('install',function(){
   svc.start();
 });
 

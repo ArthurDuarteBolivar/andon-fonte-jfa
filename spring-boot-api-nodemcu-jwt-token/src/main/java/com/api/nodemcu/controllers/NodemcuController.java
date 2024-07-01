@@ -140,9 +140,10 @@ public class NodemcuController {
         if(nodemcuUpdates.getNameId().getName().equals("100") || nodemcuUpdates.getNameId().getName().equals("110")|| nodemcuUpdates.getNameId().getName().equals("080")|| nodemcuUpdates.getNameId().getName().equals("090")){
             tcimposto = 180F;
         }
+
         if (device.getShortestTC() > nodemcuUpdates.getShortestTC() && nodemcuUpdates.getShortestTC() > 10) {
             device.setShortestTC(nodemcuUpdates.getShortestTC());
-        } else if (tcimposto < nodemcuUpdates.getCurrentTC()) {
+        } else if (tcimposto.intValue() < nodemcuUpdates.getCurrentTC()) {
             Integer excedido = device.getQtdeTCexcedido();
             excedido++;
             device.setQtdeTCexcedido(excedido);
@@ -154,7 +155,7 @@ public class NodemcuController {
         device.setCount(nodemcuUpdates.getCount());
         device.setState(nodemcuUpdates.getState());
         device.setCurrentTC(nodemcuUpdates.getCurrentTC());
-        if (device.getMaintenance() != nodemcuUpdates.getMaintenance()) {
+        if (!device.getMaintenance().equals(nodemcuUpdates.getMaintenance())) {
             isRefugo = true;
             device.setMaintenance(nodemcuUpdates.getMaintenance());
         } else {
